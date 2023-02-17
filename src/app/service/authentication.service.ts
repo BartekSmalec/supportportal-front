@@ -10,7 +10,7 @@ import { JwtHelperService, JwtModule } from "@auth0/angular-jwt";
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private host: string = environment.apiUrl;
+  public host: string = environment.apiUrl;
   private token!: string;
   private loggedInUsername!: string;
   private jwtHelper = new JwtHelperService();
@@ -69,6 +69,7 @@ export class AuthenticationService {
       this.logout();
       return false;
     }
+    return false;
   }
 
 
