@@ -28,6 +28,29 @@ body {
 .fa {
     margin-right: 5px;
 }
-.fa-user{
+
+.fa-user {
     margin-left: 5px;
+}
+
+td {
+    cursor: pointer;
+}
+
+.nav-item {
+    cursor: pointer;
+}
+
+.actions {
+    margin-right: 5px;
+}
+
+.top-input-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.top-panel {
+    margin-right: 5px;
 }
