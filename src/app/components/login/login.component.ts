@@ -38,13 +38,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.authenticationService.login(user).subscribe(
         (response: HttpResponse<User>) => {
           const token = response.headers.get(HeaderType.JWT_TOKEN);
-          console.log("Token: " +  response.headers.getAll(HeaderType.JWT_TOKEN));
           this.authenticationService.saveToken(token);
           this.authenticationService.addUserToLocalStorage(response.body);
           this.router.navigateByUrl('/user/management');
+          this.showLoading = false;
         },
         (error) => {
-          console.log("Error" + error);
           this.sendErrorNotification(NotificationType.ERROR, error.error.message)
           this.showLoading = false;
 

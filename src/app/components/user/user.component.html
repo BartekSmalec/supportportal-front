@@ -1,1 +1,29 @@
-<p>user works!</p>
+<div class="container">
+    <div class="row mb-2 mt-2 text-center">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <h5>User Management Portal</h5>
+            <small *ngIf="titleAction$ | async as title">{{ title }}</small>
+        </div>
+        <div class="col-md-4">
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">UMS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" (click)="changleTile('Users')"><i class="fa fa-users"></i>User</a>
+                <a class="nav-item nav-link" (click)="changleTile('Settings')"> <i class="fa fa-cogs"></i>Settings</a>
+                <a class="nav-item nav-link move-right" (click)="changleTile('Profile')">Welcome, {{user?.firstName}} 
+                    <i class="fa fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>

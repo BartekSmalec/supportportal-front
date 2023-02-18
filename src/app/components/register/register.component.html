@@ -1,1 +1,55 @@
-<p>register works!</p>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<br>
+<br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-group mb-0">
+                <div class="card p-4">
+                    <div class="card-body">
+                        <h1>Register</h1>
+                        <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm.value)">
+                            <div class="input-group mb-3">
+                                <span class="input-group-addon"></span>
+                                <input type="text" class="form-control" placeholder="First name" ngModel
+                                    #firstnameInput="ngModel" required="true" name="firstName">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-addon"></span>
+                                <input type="text" class="form-control" placeholder="Last name" ngModel
+                                    #lastnameInput="ngModel" required="true" name="lastName">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-addon"></span>
+                                <input type="text" class="form-control" placeholder="Email" ngModel
+                                    #emailInput="ngModel" required="true" name="email">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-addon"></span>
+                                <input type="text" class="form-control" placeholder="Username" ngModel
+                                    #usernameInput="ngModel" required="true" name="username">
+                            </div>
+                            
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="submit" [disabled]="registerForm.invalid || showLoading" name="button"
+                                        class="btn btn-primary px-4">
+                                        <i *ngIf="showLoading" class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;
+                                        <span *ngIf="showLoading">Loading...</span>
+                                        <span *ngIf="!showLoading">Register</span>
+                                    </button>
+                                </div>
+
+                                <div class="col-6 text-right">
+                                    <a routerLink="/login" class="btn btn-link px-0">Login in</a>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
