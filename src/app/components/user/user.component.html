@@ -37,8 +37,9 @@
                     <i class="fa fa-plus"></i>New User
                 </button>
 
-                <button type="button" class="btn btn-info top-panel">
-                    <i class="fas fa-sync fa-spin"></i><i class="fas fa-sync"></i>
+                <button type="button" (click)="getUsers(true)" class="btn btn-info top-panel">
+                    <i *ngIf="refreshing" class="fas fa-sync fa-spin"></i><i *ngIf="!refreshing"
+                        class="fas fa-sync"></i>
                 </button>
             </div>
         </div>
@@ -57,17 +58,21 @@
                 <th scope="col">Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody *ngFor="let appUser of users">
             <tr>
-                <td></td>
-                <td>1132123</td>
-                <td>Bartek</td>
-                <td>Smalec</td>
-                <td>infamia</td>
-                <td>smalecbartlomiej@gmail.com</td>
                 <td>
-                    <span class="badge bg-success">Active</span>
-                    <span class="badge bg-warning text-dark">Inactive</span>
+                    <img height="40" width="40" src="{{appUser?.profileImageUrl}}"
+                        class="rounded-circle img-fluid img-thumbnail" />
+                </td>
+                <td (click)="onSelectUser(appUser)">{{appUser?.id}}</td>
+                <td (click)="onSelectUser(appUser)">{{appUser?.firstName}}</td>
+                <td (click)="onSelectUser(appUser)">{{appUser?.lastName}}</td>
+                <td (click)="onSelectUser(appUser)">{{appUser?.username}}</td>
+                <td (click)="onSelectUser(appUser)">{{appUser?.email}}</td>
+                <td>
+                    <span [hidden]="!appUser?.active" class="badge bg-success">Active</span>
+                    <span [hidden]="appUser?.active" class="badge bg-warning text-dark">Inactive</span>
+
                 </td>
                 <td>
                     <div class="btn-group">
@@ -79,4 +84,74 @@
 
         </tbody>
     </table>
+
+    <!-- Button trigger modal -->
+    <button [hidden]="true" type="button" class="btn btn-primary" id="openUserInfo" data-bs-toggle="modal" data-bs-target="#userModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">   <div>{{selectedUser?.firstName }} {{selectedUser?.lastName}}</div></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4 ms-auto"> <img height="100" width="100" src="{{selectedUser?.profileImageUrl}}"
+                                    class="rounded-circle img-fluid img-thumbnail" />
+                            </div>
+                            <div class="col-md-4 ms-auto">
+                                <div>{{selectedUser?.firstName }} {{selectedUser?.lastName}}</div>
+                                <div>{{selectedUser?.username}}</div>
+                                <div>Status: <span [hidden]="!selectedUser?.active" class="badge bg-success">Active</span>
+                                    <span [hidden]="selectedUser?.active" class="badge bg-warning text-dark">Inactive</span>
+                                </div>
+                                <div><small>Last login: {{selectedUser?.lastLoginDate | date:'medium'}}</small></div>
+                            </div>
+                            <div class="col-md-4 ms-auto">
+                                <div class="text-muted text-center">
+                                    <small>Joined {{selectedUser?.joinDate | date: 'mediumDate'}}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item"></li>
+                                <li class="list-group-item"><i class="fa fa-id-badge float-end"></i>{{selectedUser?.userId }}
+                                </li>
+                                <li class="list-group-item"><i class="fa fa-envelope float-end"></i>{{selectedUser?.email }}
+                                </li>
+                                <li class="list-group-item"><i
+                                        class="fas fa-shield-alt float-end"></i>{{selectedUser?.role.substring(5) }}</li>
+                                <li class="list-group-item"><i class="fas fa-sign-in-alt float-end"></i>{{selectedUser?.joinDate
+                                    | date:'medium' }}</li>
+
+                                <li class="list-group-item">
+                                    <span [hidden]="!selectedUser?.isNonLocked">
+                                        <i class="fa fa-lock float-end" style="color: red;">
+                                        </i>
+                                        Account Locked
+                                    </span>
+                                    <span [hidden]="selectedUser?.isNonLocked">
+                                        <i class="fa fa-unlock float-end" style="color: green;">
+                                        </i>
+                                        Account Unlocked
+                                    </span>
+                                </li>
+                                <li class="list-group-item"></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
