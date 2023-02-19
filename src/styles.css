@@ -55,3 +55,12 @@ td {
 .top-panel {
     margin-right: 5px;
 }
+
+.authority-select{
+    width: 79%;
+    margin-left: 10px;
+}
+
+.avatar-intput-file{
+    width: 79%;
+}

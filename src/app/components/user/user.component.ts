@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { NotificationType } from 'src/app/enum/notification-type.enum';
 import { User } from 'src/app/model/user';
@@ -20,6 +21,8 @@ export class UserComponent implements OnInit, OnDestroy {
   refreshing: boolean;
   private subscriptions: Subscription[] = [];
   selectedUser: User;
+  fileName: string;
+  profileImage: File;
 
   constructor(private authService: AuthenticationService, private userService: UserService, private notificationService: NotificationService) { }
 
@@ -68,6 +71,33 @@ export class UserComponent implements OnInit, OnDestroy {
   public onSelectUser(selectedUser: User): void {
     this.selectedUser = selectedUser;
     document.getElementById('openUserInfo').click();
+  }
+
+  public onProfileImageChange(fileName: string, image: File): void {
+    this.fileName = fileName;
+    this.profileImage = image;
+  }
+
+  public saveNewUser(): void {
+    document.getElementById('new-user-save').click();
+  }
+
+  public onAddNewUser(userForm: NgForm): void {
+    const formData = this.userService.createUserFormData(null, userForm.value, this.profileImage);
+    this.subscriptions.push(this.userService.addUser(formData).subscribe(
+      (response: User) => {
+        document.getElementById('new-user-close').click();
+        this.getUsers(false);
+        this.fileName = null;
+        this.profileImage = null;
+        userForm.reset();
+        this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} created succesfully`);
+
+      },
+      (errorResponse) => {
+        this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+      }
+    ));
   }
 
 }

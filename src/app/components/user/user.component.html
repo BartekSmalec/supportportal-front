@@ -33,7 +33,8 @@
         <div class="col-md-4">
             <div class="input-group mb-3 top-input-group">
                 <input type="text" class="form-control top-panel" placeholder="Search" aria-label="Search">
-                <button type="button" class="btn btn-info top-panel" data-toggle="modal">
+                <button type="button" class="btn btn-info top-panel" id="openNewUser" data-bs-toggle="modal"
+                    data-bs-target="#newUserModal">
                     <i class="fa fa-plus"></i>New User
                 </button>
 
@@ -86,7 +87,8 @@
     </table>
 
     <!-- Button trigger modal -->
-    <button [hidden]="true" type="button" class="btn btn-primary" id="openUserInfo" data-bs-toggle="modal" data-bs-target="#userModal">
+    <button [hidden]="true" type="button" class="btn btn-primary" id="openUserInfo" data-bs-toggle="modal"
+        data-bs-target="#userModal">
         Launch demo modal
     </button>
 
@@ -95,20 +97,25 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">   <div>{{selectedUser?.firstName }} {{selectedUser?.lastName}}</div></h5>
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <div>{{selectedUser?.firstName }} {{selectedUser?.lastName}}</div>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-4 ms-auto"> <img height="100" width="100" src="{{selectedUser?.profileImageUrl}}"
+                            <div class="col-md-4 ms-auto"> <img height="100" width="100"
+                                    src="{{selectedUser?.profileImageUrl}}"
                                     class="rounded-circle img-fluid img-thumbnail" />
                             </div>
                             <div class="col-md-4 ms-auto">
                                 <div>{{selectedUser?.firstName }} {{selectedUser?.lastName}}</div>
                                 <div>{{selectedUser?.username}}</div>
-                                <div>Status: <span [hidden]="!selectedUser?.active" class="badge bg-success">Active</span>
-                                    <span [hidden]="selectedUser?.active" class="badge bg-warning text-dark">Inactive</span>
+                                <div>Status: <span [hidden]="!selectedUser?.active"
+                                        class="badge bg-success">Active</span>
+                                    <span [hidden]="selectedUser?.active"
+                                        class="badge bg-warning text-dark">Inactive</span>
                                 </div>
                                 <div><small>Last login: {{selectedUser?.lastLoginDate | date:'medium'}}</small></div>
                             </div>
@@ -121,29 +128,31 @@
                         <div class="row">
                             <ul class="list-group">
                                 <li class="list-group-item"></li>
-                                <li class="list-group-item"><i class="fa fa-id-badge float-end"></i>{{selectedUser?.userId }}
-                                </li>
-                                <li class="list-group-item"><i class="fa fa-envelope float-end"></i>{{selectedUser?.email }}
+                                <li class="list-group-item"><i
+                                        class="fa fa-id-badge float-end"></i>{{selectedUser?.userId }}
                                 </li>
                                 <li class="list-group-item"><i
-                                        class="fas fa-shield-alt float-end"></i>{{selectedUser?.role.substring(5) }}</li>
-                                <li class="list-group-item"><i class="fas fa-sign-in-alt float-end"></i>{{selectedUser?.joinDate
+                                        class="fa fa-envelope float-end"></i>{{selectedUser?.email }}
+                                </li>
+                                <li class="list-group-item"><i
+                                        class="fas fa-shield-alt float-end"></i>{{selectedUser?.role.substring(5) }}
+                                </li>
+                                <li class="list-group-item"><i
+                                        class="fas fa-sign-in-alt float-end"></i>{{selectedUser?.joinDate
                                     | date:'medium' }}</li>
 
                                 <li class="list-group-item">
-                                    <span [hidden]="!selectedUser?.isNonLocked">
+                                    <span [hidden]="!selectedUser?.nonLocked">
                                         <i class="fa fa-lock float-end" style="color: red;">
                                         </i>
                                         Account Locked
                                     </span>
-                                    <span [hidden]="selectedUser?.isNonLocked">
+                                    <span [hidden]="selectedUser?.nonLocked">
                                         <i class="fa fa-unlock float-end" style="color: green;">
                                         </i>
                                         Account Unlocked
                                     </span>
                                 </li>
-                                <li class="list-group-item"></li>
-
                             </ul>
                         </div>
                     </div>
@@ -154,4 +163,108 @@
             </div>
         </div>
     </div>
-</div>
+
+    <!-- New user button -->
+    <button [hidden]="true" type="button" class="btn btn-primary" id="openNewUser" data-bs-toggle="modal"
+        data-bs-target="#newUserModal">
+        Launch demo modal
+    </button>
+
+    <!-- New user Modal -->
+    <div class="modal fade" id="newUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <div><b>New user</b></div>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form #newUserForm="ngForm" (ngSubmit)="onAddNewUser(newUserForm)">
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <label for="firstNameInput">First Name</label>
+                                    <input type="text" placeholder="First name" class="form-control" id="firstNameInput"
+                                        ngModel #firstnameInput="ngModel" required="true" name="firstName">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <label for="lastNameInput">Last Name</label>
+                                    <input type="text" placeholder="Last name" class="form-control" id="lastNameInput"
+                                        ngModel #lastNameInput="ngModel" required="true" name="lastName">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <label for="usernameInput">Username</label>
+                                    <input type="text" placeholder="Username" class="form-control" id="usernameInput"
+                                        ngModel #usernameInput="ngModel" required="true" name="username">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <label for="emailInput">Email</label>
+                                    <input type="email" placeholder="Email" class="form-control" id="emailInput" ngModel
+                                        #emailinput="ngModel" required="true" name="email">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="authority">Role</label>
+                                <select class="form-select authority-select" aria-label="Role" name="role" required
+                                    ngModel="ROLE_USER">
+                                    <option value="ROLE_USER">USER</option>
+                                    <option value="ROLE_HR">HR</option>
+                                    <option value="ROLE_MANAGER">MANAGER</option>
+                                    <option value="ROLE_ADMIN">ADMIN</option>
+                                    <option value="ROLE_SUPER_ADMIN">SUPER ADMIN</option>
+                                </select>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="activeCheckbox"
+                                            name="active" ngModel>
+                                        <label class="form-check-label" for="activeCheckbox">
+                                            Active
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="unlockedCheckbox"
+                                            name="isNonLocked" ngModel>
+                                        <label class="form-check-label" for="unlockedCheckbox">
+                                            Unlocked
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Profile picture</label>
+                                <input class="form-control avatar-intput-file" type="file" accept="image/*"
+                                    name="profileImage"
+                                    (change)="onProfileImageChange($any($event.target).files[0].name, $any($event.target).files[0])"
+                                    id="formFile">
+                            </div>
+                            <button type="submit" style="display: none;" id="new-user-save"></button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="new-user-close"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" (click)="saveNewUser()" [disabled]="newUserForm.invalid"
+                            class="btn btn-primary">Save changes</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
