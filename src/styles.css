@@ -63,11 +63,16 @@ td {
 }
 
 .avatar-intput-file{
-    width: 79%;
-    margin-left: 10px;
+    width: 83%;
+    margin-left: 0px;
 }
 .search-input{
     width: 100%;
+}
+
+.edit-input{
+    width: 81%;
+    margin-left: 12px;
 }
 
 /* div[class="row"] {

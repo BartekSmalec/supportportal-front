@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { NotificationType } from 'src/app/enum/notification-type.enum';
+import { CustomHttpResponse } from 'src/app/model/CustomHttpResponse';
 import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 import { NotificationService } from 'src/app/service/notification.service';
@@ -21,8 +22,10 @@ export class UserComponent implements OnInit, OnDestroy {
   refreshing: boolean;
   private subscriptions: Subscription[] = [];
   selectedUser: User;
+  editUser = new User();
   fileName: string;
   profileImage: File;
+  currenUsername: string;
 
   constructor(private authService: AuthenticationService, private userService: UserService, private notificationService: NotificationService) { }
 
@@ -73,6 +76,15 @@ export class UserComponent implements OnInit, OnDestroy {
     document.getElementById('openUserInfo').click();
   }
 
+  public onSelectEditUser(editUser: User) {
+    this.editUser = editUser;
+    this.currenUsername = editUser.username;
+
+    console.log(JSON.stringify(this.editUser));
+
+    document.getElementById('editUserButton').click()
+  }
+
   public onProfileImageChange(fileName: string, image: File): void {
     this.fileName = fileName;
     this.profileImage = image;
@@ -80,6 +92,29 @@ export class UserComponent implements OnInit, OnDestroy {
 
   public saveNewUser(): void {
     document.getElementById('new-user-save').click();
+  }
+
+
+  public editCurrentUser(): void {
+    document.getElementById('user-edit-button').click();
+  }
+
+  public onUpdateUser(editForm: NgForm): void {
+    const formData = this.userService.createUserFormData(this.currenUsername, this.editUser, this.profileImage);
+    this.subscriptions.push(this.userService.updateUser(formData).subscribe(
+      (response: User) => {
+        document.getElementById('user-edit-close').click();
+        this.getUsers(false);
+        this.fileName = null;
+        this.profileImage = null;
+        editForm.reset();
+        this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} updated succesfully`);
+
+      },
+      (errorResponse) => {
+        this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+      }
+    ));
   }
 
   public onAddNewUser(userForm: NgForm): void {
@@ -113,6 +148,20 @@ export class UserComponent implements OnInit, OnDestroy {
     if (results.length === 0 || !searchTerm) {
       this.users = this.userService.getUsersFromLocalCache();
     }
+  }
+
+  public onDeleteUser(id: number) {
+    this.subscriptions.push(this.userService.deleteUser(id).subscribe(
+      (response: CustomHttpResponse) => {
+
+        this.sendNotification(NotificationType.SUCCESS, response.message);
+        this.getUsers(true);
+
+      },
+      (errorResponse) => {
+        this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+      }
+    ));
   }
 
 
