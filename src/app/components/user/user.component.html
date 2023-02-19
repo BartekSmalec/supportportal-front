@@ -10,22 +10,36 @@
         </div>
     </div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">UMS</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link active" (click)="changleTile('Users')"><i class="fa fa-users"></i>User</a>
-                <a class="nav-item nav-link" (click)="changleTile('Settings')"> <i class="fa fa-cogs"></i>Settings</a>
-                <a class="nav-item nav-link move-right" (click)="changleTile('Profile')">Welcome, {{user?.firstName}}
-                    <i class="fa fa-user"></i>
-                </a>
+    <div class="row">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <div class="col-md-1">
+                <li class="nav-item" role="presentation">
+                    <button (click)="changleTile('Users')" class="active btn btn-info" id="pills-home-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
+                        aria-controls="pills-home" aria-selected="true"><i class="fa fa-users"></i>Users</button>
+                </li>
             </div>
-        </div>
-    </nav>
+            <div class="col-md-2">
+                <li class="nav-item" role="presentation">
+                    <button (click)="changleTile('Settings')" class="btn" id="pills-profile-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab"
+                        aria-controls="pills-profile" aria-selected="false"><i class="fa fa-cogs"></i>Settings</button>
+                </li>
+            </div>
+            <div class="col-md-7"></div>
+            <div class="col-md-2">
+                <li class="nav-item nav-link welcome-item" role="presentation">
+                    <a class="nav-item nav-link" (click)="changleTile('Profile')" id="pills-contact-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-contact" role="tab"
+                        aria-controls="pills-contact" aria-selected="false"> <i class="fa fa-user"></i> Welcome,
+                        {{user?.firstName}}
+                    </a>
+                </li>
+            </div>
+
+
+        </ul>
+    </div>
 
     <div class="row align-items-end">
         <div class="col-md-7">
@@ -50,52 +64,80 @@
         </div>
     </div>
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Photo</th>
-                <th scope="col">User ID</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Username</th>
-                <th scope="col">Email</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody *ngFor="let appUser of users">
-            <tr>
-                <td>
-                    <img height="40" width="40" src="{{appUser?.profileImageUrl}}"
-                        class="rounded-circle img-fluid img-thumbnail" />
-                </td>
-                <td (click)="onSelectUser(appUser)">{{appUser?.id}}</td>
-                <td (click)="onSelectUser(appUser)">{{appUser?.firstName}}</td>
-                <td (click)="onSelectUser(appUser)">{{appUser?.lastName}}</td>
-                <td (click)="onSelectUser(appUser)">{{appUser?.username}}</td>
-                <td (click)="onSelectUser(appUser)">{{appUser?.email}}</td>
-                <td>
-                    <span [hidden]="!appUser?.active" class="badge bg-success">Active</span>
-                    <span [hidden]="appUser?.active" class="badge bg-warning text-dark">Inactive</span>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Photo</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let appUser of users">
+                    <tr>
+                        <td>
+                            <img height="40" width="40" src="{{appUser?.profileImageUrl}}"
+                                class="rounded-circle img-fluid img-thumbnail" />
+                        </td>
+                        <td (click)="onSelectUser(appUser)">{{appUser?.id}}</td>
+                        <td (click)="onSelectUser(appUser)">{{appUser?.firstName}}</td>
+                        <td (click)="onSelectUser(appUser)">{{appUser?.lastName}}</td>
+                        <td (click)="onSelectUser(appUser)">{{appUser?.username}}</td>
+                        <td (click)="onSelectUser(appUser)">{{appUser?.email}}</td>
+                        <td>
+                            <span [hidden]="!appUser?.active" class="badge bg-success">Active</span>
+                            <span [hidden]="appUser?.active" class="badge bg-warning text-dark">Inactive</span>
 
-                </td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-info actions" (click)="onSelectEditUser(appUser)"><i
-                                class="fas fa-edit"></i></button>
-                        <button class="btn-actions actions" (click)="onDeleteUser(appUser.id)"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
-            </tr>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-info actions" (click)="onSelectEditUser(appUser)"><i
+                                        class="fas fa-edit"></i></button>
+                                <button class="btn-actions actions" (click)="onDeleteUser(appUser.id)"><i
+                                        class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
 
-        </tbody>
-    </table>
+                </tbody>
+            </table>
 
-    <!-- Button trigger modal -->
-    <button [hidden]="true" type="button" class="btn btn-primary" id="openUserInfo" data-bs-toggle="modal"
-        data-bs-target="#userModal">
-        Launch demo modal
-    </button>
+            <!-- Button trigger modal -->
+            <button [hidden]="true" type="button" class="btn btn-primary" id="openUserInfo" data-bs-toggle="modal"
+                data-bs-target="#userModal">
+                Launch demo modal
+            </button>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div>
+                <form #resetPasswordForm="ngForm" (ngSubmit)="onResetPassword(resetPasswordForm)">
+                    <fieldset>
+                        <legend>User password management</legend>
+                        <div class="form-group">
+                            <label for="reset-password-email">Email address</label>
+                            <input type="email" name="reset-password-email" required ngModel class="form-control"
+                                placeholder="Enter email (example@email.com)" />
+                            <small class="form-text text-muted">We'll never share your email with anyone</small>
+                        </div>
+                        <button type="submit" [disabled]="false" class="btn btn-primary">
+                            <i *ngIf="refreshing" class="fas fa-spinner fa-spin"></i>
+                            <span *ngIf="refreshing">Loading ...</span>
+                            <span *ngIf="!refreshing">Reset Password</span>
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Profile</div>
+    </div>
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -122,7 +164,8 @@
                                     <span [hidden]="selectedUser?.active"
                                         class="badge bg-warning text-dark">Inactive</span>
                                 </div>
-                                <div><small>Last login: {{selectedUser?.lastLoginDate | date:'medium'}}</small></div>
+                                <div><small>Last login: {{selectedUser?.lastLoginDate | date:'medium'}}</small>
+                                </div>
                             </div>
                             <div class="col-md-4 ms-auto">
                                 <div class="text-muted text-center">
@@ -370,7 +413,4 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>

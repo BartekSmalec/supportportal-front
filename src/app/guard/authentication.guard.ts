@@ -13,7 +13,7 @@ export class AuthenticationGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+    return this.isUserLoggedIn();
   }
 
   constructor(private authenticationService: AuthenticationService, private router: Router, private notificationService: NotificationService) { }

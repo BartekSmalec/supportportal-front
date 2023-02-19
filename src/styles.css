@@ -16,10 +16,6 @@ body {
     width: 100%;
 }
 
-.navbar-brand {
-    margin-left: 20px;
-}
-
 .move-right {
     position: absolute;
     right: 0;
@@ -74,6 +70,13 @@ td {
     width: 81%;
     margin-left: 12px;
 }
+
+.welcome-item{
+    margin-left: 0px;
+    border-style: none;
+    color: ;
+}
+
 
 /* div[class="row"] {
     outline: 1px dotted rgba(0, 0, 0, 0.25);
