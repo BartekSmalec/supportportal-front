@@ -74,7 +74,9 @@ td {
 .welcome-item{
     margin-left: 0px;
     border-style: none;
-    color: ;
+}
+.nav-pills{
+    margin-left: 15px;
 }
 
 

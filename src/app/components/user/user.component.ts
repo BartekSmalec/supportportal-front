@@ -1,9 +1,11 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { NotificationType } from 'src/app/enum/notification-type.enum';
 import { CustomHttpResponse } from 'src/app/model/CustomHttpResponse';
+import { FileUploadStatus } from 'src/app/model/file-upload.status';
 import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 import { NotificationService } from 'src/app/service/notification.service';
@@ -15,6 +17,7 @@ import { UserService } from 'src/app/service/user.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit, OnDestroy {
+
   user: User;
   private titleSubject = new BehaviorSubject<string>('Users');
   public titleAction$ = this.titleSubject.asObservable();
@@ -26,8 +29,10 @@ export class UserComponent implements OnInit, OnDestroy {
   fileName: string;
   profileImage: File;
   currenUsername: string;
+  isAdmin = true;
+  fileStatus = new FileUploadStatus();
 
-  constructor(private authService: AuthenticationService, private userService: UserService, private notificationService: NotificationService) { }
+  constructor(private router: Router, private authService: AuthenticationService, private userService: UserService, private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
@@ -36,11 +41,15 @@ export class UserComponent implements OnInit, OnDestroy {
     this.getUsers(true);
   }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   public changleTile(title: string): void {
     this.titleSubject.next(title);
+  }
+
+  updateProfileImage() {
+    document.getElementById('profile-image-input').click();
   }
 
   public getUsers(showNotification: boolean): void {
@@ -181,6 +190,74 @@ export class UserComponent implements OnInit, OnDestroy {
         () => emailForm.reset()
       )
     )
+  }
+
+  public onUpdateCurrentUser(user: User): void {
+    this.refreshing = true;
+    console.log(JSON.stringify(user))
+    this.currenUsername = this.authService.getUserFromLocalStorage().username;
+    const formData = this.userService.createUserFormData(this.currenUsername, user, this.profileImage);
+    this.subscriptions.push(this.userService.updateUser(formData).subscribe(
+      (response: User) => {
+        this.authService.addUserToLocalStorage(response);
+        this.getUsers(false);
+        this.fileName = null;
+        this.profileImage = null;
+        this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} updated succesfully`);
+
+      },
+      (errorResponse) => {
+        this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+        this.profileImage = null;
+        this.refreshing = false;
+      }
+    ));
+  }
+
+  public onLogOut(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    this.sendNotification(NotificationType.SUCCESS, `You've been successfully logged out`);
+  }
+
+  public onUpdateProfileImage(): void {
+    const formData = new FormData();
+    formData.append('username', this.user.username);
+    formData.append('profileImage', this.profileImage);
+
+    this.subscriptions.push(this.userService.updateProfileImage(formData).subscribe(
+      (event: HttpEvent<any>) => {
+        this.reportUploadProgress(event);
+
+
+      },
+      (errorResponse) => {
+        this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+        this.fileStatus.status = 'done';
+
+      }
+    ));
+  }
+  reportUploadProgress(event: HttpEvent<any>): void {
+    switch (event.type) {
+      case HttpEventType.UploadProgress:
+        this.fileStatus.percentage = Math.round(event.loaded / event.total * 100);
+        this.fileStatus.status = 'progress';
+        break;
+      case HttpEventType.Response:
+        if (event.status === 201) {
+          this.user.profileImageUrl = `${event.body.profileImageUrl}?time=${new Date().getTime()}`
+          this.sendNotification(NotificationType.SUCCESS, `${event.body.firstName} \'s profile image updated successfully`);
+          this.fileStatus.status = 'done';
+          break;
+        } else {
+          this.sendNotification(NotificationType.ERROR, `Unable to load image. Try again`);
+          break;
+        }
+      default:
+        `Finished all processes`;
+
+    }
   }
 
 

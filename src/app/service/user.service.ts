@@ -39,7 +39,7 @@ export class UserService {
       });
   }
 
-  public deleteUser(id: Number): Observable<any | HttpErrorResponse> {
+  public deleteUser(id: Number): Observable<any> {
     return this.http.delete<any>(`${this.host}/user/delete/${id}`);
   }
 
