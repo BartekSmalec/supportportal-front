@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { NotificationType } from 'src/app/enum/notification-type.enum';
+import { Role } from 'src/app/enum/role.enum';
 import { CustomHttpResponse } from 'src/app/model/CustomHttpResponse';
 import { FileUploadStatus } from 'src/app/model/file-upload.status';
 import { User } from 'src/app/model/user';
@@ -29,7 +30,7 @@ export class UserComponent implements OnInit, OnDestroy {
   fileName: string;
   profileImage: File;
   currenUsername: string;
-  isAdmin = true;
+  //isAdmin = true;
   fileStatus = new FileUploadStatus();
 
   constructor(private router: Router, private authService: AuthenticationService, private userService: UserService, private notificationService: NotificationService) { }
@@ -50,6 +51,18 @@ export class UserComponent implements OnInit, OnDestroy {
 
   updateProfileImage() {
     document.getElementById('profile-image-input').click();
+  }
+
+  public get isAdmin(): boolean{
+    return this.getUserRole() === Role.ADMIN || this.getUserRole() === Role.SUPER_ADMIN;
+  }
+
+  public get isManager(): boolean{
+    return this.isAdmin || this.getUserRole() === Role.MANAGER;
+  }
+
+  private getUserRole(): string{
+    return this.authService.getUserFromLocalStorage().role;
   }
 
   public getUsers(showNotification: boolean): void {
@@ -113,10 +126,11 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.userService.updateUser(formData).subscribe(
       (response: User) => {
         document.getElementById('user-edit-close').click();
-        this.getUsers(false);
+        
         this.fileName = null;
         this.profileImage = null;
         editForm.reset();
+        this.getUsers(true);
         this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} updated succesfully`);
 
       },
@@ -159,8 +173,8 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onDeleteUser(id: number) {
-    this.subscriptions.push(this.userService.deleteUser(id).subscribe(
+  public onDeleteUser(username: string) {
+    this.subscriptions.push(this.userService.deleteUser(username).subscribe(
       (response: CustomHttpResponse) => {
 
         this.sendNotification(NotificationType.SUCCESS, response.message);
@@ -249,6 +263,9 @@ export class UserComponent implements OnInit, OnDestroy {
           this.user.profileImageUrl = `${event.body.profileImageUrl}?time=${new Date().getTime()}`
           this.sendNotification(NotificationType.SUCCESS, `${event.body.firstName} \'s profile image updated successfully`);
           this.fileStatus.status = 'done';
+
+          this.authService.addUserToLocalStorage(this.user);
+
           break;
         } else {
           this.sendNotification(NotificationType.ERROR, `Unable to load image. Try again`);
