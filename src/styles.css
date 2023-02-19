@@ -51,6 +51,7 @@ td {
     flex-wrap: wrap;
     margin-top: 10px;
     margin-bottom: 10px;
+    margin-left: 80px;
 }
 .top-panel {
     margin-right: 5px;
@@ -63,4 +64,17 @@ td {
 
 .avatar-intput-file{
     width: 79%;
+    margin-left: 10px;
 }
+.search-input{
+    width: 100%;
+}
+
+/* div[class="row"] {
+    outline: 1px dotted rgba(0, 0, 0, 0.25);
+}
+
+div[class^="col-"] {
+    background-color: rgba(255, 0, 0, 0.2);
+    outline: 1px dotted rgba(0, 0, 0, 0.5);
+} */

@@ -27,12 +27,16 @@
         </div>
     </nav>
 
-    <div class="row">
-        <div class="col-md-8">
+    <div class="row align-items-end">
+        <div class="col-md-7">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5 align-self-end">
             <div class="input-group mb-3 top-input-group">
-                <input type="text" class="form-control top-panel" placeholder="Search" aria-label="Search">
+                <form #searchForm="ngForm" class="top-panel">
+                    <input type="search" ngModel name="searchInput" class="form-control search-input"
+                        (ngModelChange)="searchUsers(searchForm.value.searchInput)" placeholder="Search"
+                        aria-label="Search">
+                </form>
                 <button type="button" class="btn btn-info top-panel" id="openNewUser" data-bs-toggle="modal"
                     data-bs-target="#newUserModal">
                     <i class="fa fa-plus"></i>New User
@@ -129,7 +133,8 @@
                             <ul class="list-group">
                                 <li class="list-group-item"></li>
                                 <li class="list-group-item"><i
-                                        class="fa fa-id-badge float-end"></i>{{selectedUser?.userId }}
+                                        class="fa fa-id-badge float-end"></i>{{selectedUser?.userId
+                                    }}
                                 </li>
                                 <li class="list-group-item"><i
                                         class="fa fa-envelope float-end"></i>{{selectedUser?.email }}
