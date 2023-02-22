@@ -53,15 +53,15 @@ export class UserComponent implements OnInit, OnDestroy {
     document.getElementById('profile-image-input').click();
   }
 
-  public get isAdmin(): boolean{
+  public get isAdmin(): boolean {
     return this.getUserRole() === Role.ADMIN || this.getUserRole() === Role.SUPER_ADMIN;
   }
 
-  public get isManager(): boolean{
+  public get isManager(): boolean {
     return this.isAdmin || this.getUserRole() === Role.MANAGER;
   }
 
-  private getUserRole(): string{
+  private getUserRole(): string {
     return this.authService.getUserFromLocalStorage().role;
   }
 
@@ -70,9 +70,9 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.userService.getUsers().subscribe(
         (response: User[]) => {
-          console.log("Response: " + response)
-          this.userService.addUsersToLocalCache(response)
           this.users = response;
+          this.userService.addUsersToLocalCache(response)
+          console.log("Response: " + JSON.stringify(response))
           this.refreshing = false;
           if (showNotification) {
             this.sendNotification(NotificationType.SUCCESS, `${response.length} user(s) loaded successfully.`);
@@ -120,19 +120,20 @@ export class UserComponent implements OnInit, OnDestroy {
   public editCurrentUser(): void {
     document.getElementById('user-edit-button').click();
   }
-
+  
   public onUpdateUser(editForm: NgForm): void {
     const formData = this.userService.createUserFormData(this.currenUsername, this.editUser, this.profileImage);
     this.subscriptions.push(this.userService.updateUser(formData).subscribe(
       (response: User) => {
+        this.getUsers(true);
         document.getElementById('user-edit-close').click();
-        
+  
         this.fileName = null;
         this.profileImage = null;
-        editForm.reset();
-        this.getUsers(true);
-        this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} updated succesfully`);
 
+
+        this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} updated succesfully`);
+        editForm.reset();
       },
       (errorResponse) => {
         this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
