@@ -1,3 +1,5 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/BartekSmalec/supportportal-front/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/BartekSmalec/supportportal-front/tree/master)
+
 # SupportportalFront
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.1.
